@@ -33,10 +33,11 @@ private slots:
     void onReconnectTimeout();
 
 private:
-    QTcpSocket m_sock;
+    QTcpSocket* m_sock = nullptr;
+    QTimer* m_reconnectTimer = nullptr;
+
     QHostAddress m_ip;
     quint16 m_port = 0;
-    QTimer m_reconnectTimer;
 };
 
 
