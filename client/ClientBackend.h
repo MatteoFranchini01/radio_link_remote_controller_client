@@ -10,6 +10,7 @@ class UdpClientWorker;
 class ClientBackend : public QObject
 {
     Q_OBJECT
+
 public:
     explicit ClientBackend(QObject* parent = nullptr);
     ~ClientBackend() override;
