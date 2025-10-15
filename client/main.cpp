@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
     // MainWindow w;
     // w.show();
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     ClientBackend client;
 
     QObject::connect(&client, &ClientBackend::tcpConnected, [](){
-        qDebug() << "[CLIENT] connesso al sever"
+        qDebug() << "[CLIENT] connesso al sever";
     });
 
     QObject::connect(&client, &ClientBackend::tcpDataReceived, [&](const QByteArray& data){
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
         client.stop();
 
         app.quit();
-    })
+    });
 
-    return a.exec();
+    return app.exec();
 }

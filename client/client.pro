@@ -19,7 +19,8 @@ HEADERS += \
     ClientBackend.h \
     ClientUdpWorker.h \
     TcpClientWorker.h \
-    mainwindow.h
+    mainwindow.h \
+    nettypes.h
 
 # FORMS += \
 #     mainwindow.ui
