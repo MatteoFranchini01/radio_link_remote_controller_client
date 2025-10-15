@@ -1,41 +1,37 @@
-#include "mainwindow.h"
-
-#include <QApplication>
+#include <QCoreApplication>
 #include <QTimer>
 #include <QHostAddress>
 #include <QDebug>
 
-#include "ClientBackend.h"
+#include "ClientBackend.h".h"
+#include "nettypes.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    // MainWindow w;
-    // w.show();
+    QCoreApplication app(argc, argv);
 
-    fprintf(stderr, "Hello from client!\n");
+    qInfo() << "== avvio client ==";
 
     ClientBackend client;
 
-    QObject::connect(&client, &ClientBackend::tcpConnected, [](){
-        qDebug() << "[CLIENT] connesso al sever";
+    QObject::connect(&client, &ClientBackend::error,
+                     [](const QString& where, const QString& msg){
+                         qWarning() << "[CLIENT][ERROR]" << where << ":" << msg;
+                     });
+    QObject::connect(&client, &ClientBackend::tcpConnected, [&](){
+        qInfo() << "[CLIENT] connesso, invio messaggio...";
+        client.sendTcp(TcpPacket{ QByteArray("Ciao dal client!") });
     });
+    QObject::connect(&client, &ClientBackend::tcpDataReceived,
+                     [](const QByteArray& data){
+                         qInfo() << "[CLIENT] RX:" << data;
+                     });
 
-    QObject::connect(&client, &ClientBackend::tcpDataReceived, [&](const QByteArray& data){
-        qDebug() << "[CLIENT] Ricevuto dal server:" << data;
-    });
+    if (!client.start(QHostAddress::LocalHost, 5551, 5500)) {
+        qCritical() << "start fallito";
+        return 1;
+    }
 
-    QTimer::singleShot(500, [&]() {
-        client.sendTcp(TcpPacket { QByteArray("ciato dal client") });
-    });
-
-    QTimer::singleShot(5000, [&]() {
-        qDebug() << "Arresto client";
-
-        client.stop();
-
-        app.quit();
-    });
-
+    QTimer::singleShot(8000, [&](){ qInfo() << "stop client"; client.stop(); app.quit(); });
     return app.exec();
 }

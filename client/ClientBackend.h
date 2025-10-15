@@ -1,11 +1,7 @@
-#ifndef CLIENTBACKEND_H
-#define CLIENTBACKEND_H
-
-#include <QObject>
-
 #pragma once
 #include <QObject>
 #include <QThread>
+#include <QHostAddress>
 #include "nettypes.h"
 
 class TcpClientWorker;
@@ -18,7 +14,7 @@ public:
     explicit ClientBackend(QObject* parent = nullptr);
     ~ClientBackend() override;
 
-    bool start(const QHostAddress& serverIp, quint16 tcpPort, quint16 udpPort);
+    bool start(const QHostAddress& serverIp, quint16 tcpPort, quint16 udpLocalBindPort);
     void stop();
 
     void sendTcp(const TcpPacket& pkt);
@@ -34,12 +30,9 @@ signals:
     void error(QString where, QString message);
 
 private:
-    QThread m_tcpThread;
-    QThread m_udpThread;
+    QThread         m_tcpThread;
+    QThread         m_udpThread;
     TcpClientWorker* m_tcpWorker = nullptr;
     UdpClientWorker* m_udpWorker = nullptr;
-    bool m_running = false;
+    bool            m_running = false;
 };
-
-
-#endif // CLIENTBACKEND_H

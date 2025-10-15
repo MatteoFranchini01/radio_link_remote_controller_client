@@ -1,6 +1,3 @@
-#ifndef CLIENTUDPWORKER_H
-#define CLIENTUDPWORKER_H
-
 #pragma once
 #include <QObject>
 #include <QUdpSocket>
@@ -13,9 +10,9 @@ public:
     explicit UdpClientWorker(QObject* parent = nullptr);
 
 public slots:
-    void start(quint16 localBindPort);        // 0 = porta effimera
+    void start(quint16 localBindPort);   // 0 = porta effimera
     void stop();
-    void send(const UdpPacket& pkt);          // serverIp+port in pkt
+    void send(const UdpPacket& pkt);     // invia verso pkt.peer:pkt.port
 
 signals:
     void dataReceived(QHostAddress from, quint16 port, QByteArray data);
@@ -25,9 +22,6 @@ private slots:
     void onReadyRead();
 
 private:
-    QUdpSocket m_sock;
-    quint16 m_localPort = 0;
+    QUdpSocket* m_sock = nullptr;        // creato in start()
+    quint16     m_localPort = 0;
 };
-
-
-#endif // CLIENTUDPWORKER_H

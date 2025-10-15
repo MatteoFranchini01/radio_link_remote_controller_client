@@ -1,13 +1,10 @@
-#ifndef TCPCLIENTWORKER_H
-#define TCPCLIENTWORKER_H
-
-#include <QObject>
-
 #pragma once
 #include <QObject>
 #include <QTcpSocket>
-#include <QTimer>
+#include <QHostAddress>
 #include "nettypes.h"
+
+class QTimer;
 
 class TcpClientWorker : public QObject
 {
@@ -33,12 +30,8 @@ private slots:
     void onReconnectTimeout();
 
 private:
-    QTcpSocket* m_sock = nullptr;
-    QTimer* m_reconnectTimer = nullptr;
-
+    QTcpSocket*  m_sock = nullptr;         // creato in start()
+    QTimer*      m_reconnectTimer = nullptr; // creato in start()
     QHostAddress m_ip;
-    quint16 m_port = 0;
+    quint16      m_port = 0;
 };
-
-
-#endif // TCPCLIENTWORKER_H
